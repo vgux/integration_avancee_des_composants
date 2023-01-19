@@ -89,7 +89,7 @@ g = G .* L_T;
 c = C .* L_T;
 
 % Calcul de Zs et Zp du modéle électrique du tronçon et affichage
-Zs = r + j .* l .* Omega;
+Zs = r + i .* l .* Omega;
 Zp = 1./ ( g + i .* c .* Omega );
 
 figure(31) 
@@ -129,64 +129,67 @@ ABCD_tron = [ A_tron   B_tron   C_tron   D_tron ] ; %
 
 %----- Question 4 ----------------------------------------------------------------------------------%
 % Decommentez et completez
-% 
-% % Calcul de ABCD_equ 
-% [ABCD_equ, A_equ,B_equ,C_equ,D_equ] = FCT_Prod_Matrice(.........., ............)
-% 
-% % Calcul de Gamma_equ 
-% Gamma_equ  = acosh(A_equ) ./ L_line;
-% 
-% % Comparaison de Gamma_line et Gamma_equ 
-% figure(41);
-% hold on;
-% title('Comparaison des Attenuations Alpha (Np/m) ');
-% plot(Freq,real(Gamma_line));
-% plot(Freq,real(Gamma_equ));
-% legend('Alpha-line','Alpha-equ');
-% xlabel ('Fréquence Hz');
-% ylabel('Np/m');
-% hold off;
-% 
-% figure(42);
-% 
-%
-%
-%
-%
-% 
-% % Errueur relative en % des parties réelle et imaginaire qu’il existe entre 
-% % Gamma_equ et Gamma_line   (Gamma_line étant la référence)
-% ErreurRel_realGamm = ((real(Gamma_equ.') - real(Gamma_line)) ./ real(Gamma_line)) * 100;
-% ErreurRel_imagGamm = ....................................................................................................  ;
-% 
-% figure(43) 
-% plot(Freq,ErreurRel_realGamm);
-% title('Erreur Relative entre parties réelles de Gamma, Attenuations - %');
-% xlabel('Fréquence (Hz)');
-% ylabel('%');
-% 
-% figure(44) 
-% 
-%
-%
-%
-%
-% 
-% 
-% % Calcul de  ZC_equ
-% ZC_equ = ................. ;
-% 
-% % Comparaison de ZC_line et ZC_equ 
-% figure(45);
-% hold on;
-% title('Comparaison des parties réelles de ZC');
-% plot(Freq,real(ZC_line));
-% plot(Freq,real(ZC_equ));
-% legend('ZC-line','ZC-equ');
-% xlabel ('Fréquence Hz');
-% ylabel('Ohms');
-% hold off;
-% 
+
+% Calcul de ABCD_equ 
+[ABCD_equ, A_equ,B_equ,C_equ,D_equ] = FCT_Prod_Matrice(ABCD_tron, ABCD_tron);
+
+% Calcul de Gamma_equ 
+Gamma_equ  = acosh(A_equ) ./ L_line;
+
+% Comparaison de Gamma_line et Gamma_equ 
+figure(41);
+hold on;
+title('Comparaison des Attenuations Alpha (Np/m) ');
+plot(Freq,real(Gamma_line.'));
+plot(Freq,real(Gamma_equ));
+legend('Alpha-line','Alpha-equ');
+xlabel ('Fréquence Hz');
+ylabel('Np/m');
+hold off;
+
+figure(42);
+title('Comparaison des Attenuations Beta (Radian/m) ');
+plot(Freq,imag(Gamma_line).');
+plot(Freq,imag(Gamma_equ));
+legend('Beta-line','Beta-equ');
+xlabel ('Fréquence Hz');
+ylabel('Rad/m');
+hold off;
+
+% Erreur relative en % des parties réelle et imaginaire qu’il existe entre 
+% Gamma_equ et Gamma_line   (Gamma_line étant la référence)
+ErreurRel_realGamm = ((real(Gamma_equ.') - real(Gamma_line)) ./ real(Gamma_line)) * 100;
+ErreurRel_imagGamm = ((imag(Gamma_equ.') - imag(Gamma_line)) ./ imag(Gamma_line)) * 100;
+
+figure(43) 
+plot(Freq,ErreurRel_realGamm);
+title('Erreur Relative entre parties réelles de Gamma, Attenuations - %');
+xlabel('Fréquence (Hz)');
+ylabel('%');
+
+figure(44) 
+plot(Freq,ErreurRel_imagGamm);
+title('Erreur Relative entre parties imaginaires de Gamma, Attenuations - %');
+xlabel('Fréquence (Hz)');
+ylabel('%');
+
+% Calcul de  ZC_equ
+ZC_equ = Zs .* (1./Zp);
+
+% Comparaison de ZC_line et ZC_equ 
+figure(45);
+hold on;
+title('Comparaison des parties réelles de ZC');
+plot(Freq,real(ZC_line));
+plot(Freq,real(ZC_equ));
+legend('ZC-line','ZC-equ');
+xlabel ('Fréquence Hz');
+ylabel('Ohms');
+hold off;
+
+% ATTENTION, LIGNE 152 ! bug, il faut qu'il y ai un vecteur colonne
+
+
 % figure(46);
 % 
 %
